@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="RangeBar">
-        <attr name="showText" format="boolean"/>
+    <declare-styleable name="Bar">
         <attr name="length" format="dimension"/>
         <attr name="width" format="dimension"/>
         <attr name="color" format="color"/>
