@@ -3,7 +3,6 @@ package telesoftas.rangebartest.bar;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -12,7 +11,7 @@ import utils.TypedAttributes;
 import utils.TypedAttributesImpl;
 
 public class RangeBar extends View {
-    private Bar bar;
+    private Bar backBar;
 
     public RangeBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -29,13 +28,14 @@ public class RangeBar extends View {
                 attributeSet, R.styleable.RangeBar);
         int length = attributes.getLayoutDimension(R.styleable.RangeBar_length);
         int width = attributes.getLayoutDimension(R.styleable.RangeBar_width) * 2;
+        int color = attributes.getColor(R.styleable.RangeBar_color);
         attributes.recycle();
-        bar = new Bar(length, width, ContextCompat.getColor(getContext(), R.color.colorAccent));
+        backBar = new Bar(length, width, color);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        bar.draw(canvas);
+        backBar.draw(canvas);
     }
 }

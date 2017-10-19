@@ -18,6 +18,7 @@ public class Bar {
         paint.setStrokeWidth(width);
         paint.setColor(color);
         paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.ROUND);
         return paint;
     }
 

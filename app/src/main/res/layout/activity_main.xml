@@ -10,9 +10,18 @@
 
     <telesoftas.rangebartest.bar.RangeBar
         android:layout_width="256dp"
-        android:layout_height="256dp"
+        android:layout_height="4dp"
         android:layout_gravity="center"
+        custom:color="@color/colorAccent"
         custom:length="256dp"
-        custom:width="256dp"/>
+        custom:width="4dp"/>
+
+    <telesoftas.rangebartest.bar.RangeBar
+        android:layout_width="64dp"
+        android:layout_gravity="center"
+        android:layout_height="4dp"
+        custom:color="@color/colorPrimary"
+        custom:length="64dp"
+        custom:width="4dp"/>
 
 </FrameLayout>
