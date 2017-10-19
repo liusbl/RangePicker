@@ -10,10 +10,15 @@ public class Bar {
 
     public Bar(int length, float width, @ColorInt int color) {
         this.length = length;
-        paint = new Paint();
+        paint = createPaint(width, color);
+    }
+
+    private Paint createPaint(float width, @ColorInt int color) {
+        Paint paint = new Paint();
         paint.setStrokeWidth(width);
         paint.setColor(color);
         paint.setAntiAlias(true);
+        return paint;
     }
 
     void draw(Canvas canvas) {
