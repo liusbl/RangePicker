@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
@@ -16,17 +17,17 @@ public class Bar extends View {
     private Paint paint;
     private int length;
 
-    public Bar(Context context, @Nullable AttributeSet attrs) {
+    public Bar(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public Bar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public Bar(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
-    private void init(Context context, AttributeSet attributeSet) {
+    private void init(@NonNull Context context, AttributeSet attributeSet) {
         TypedAttributes attributes = new TypedAttributesImpl(context,
                 attributeSet, R.styleable.Bar);
         length = attributes.getLayoutDimension(R.styleable.Bar_length);
@@ -36,6 +37,7 @@ public class Bar extends View {
         paint = createPaint(width, color);
     }
 
+    @NonNull
     private Paint createPaint(float width, @ColorInt int color) {
         Paint paint = new Paint();
         paint.setStrokeWidth(width);
@@ -46,7 +48,7 @@ public class Bar extends View {
     }
 
     @Override
-    protected void onDraw(Canvas canvas) {
+    protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawLine(0, 0, length, 0, paint);
     }

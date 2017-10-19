@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.CheckResult;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.StyleableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -11,11 +12,11 @@ import android.util.AttributeSet;
 import telesoftas.rangebartest.R;
 
 public class TypedAttributesImpl implements TypedAttributes {
-    private final Context context;
+    @NonNull private final Context context;
     private final TypedArray attributes;
 
     public TypedAttributesImpl(
-            Context context,
+            @NonNull Context context,
             AttributeSet attributeSet,
             @StyleableRes int[] styleableRes
     ) {
