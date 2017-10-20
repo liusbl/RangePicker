@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         custom:innerColor="@color/green"
-        custom:innerLength="92dp"
         custom:outerColor="@color/red"
         custom:outerLength="228dp"
         custom:thumbColor="@color/blue"

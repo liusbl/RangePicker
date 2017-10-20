@@ -37,17 +37,16 @@ public class BarsWithThumbs extends View {
     private void init(@NonNull Context context, AttributeSet attributeSet) {
         TypedAttributes attributes = new TypedAttributesImpl(context,
                 attributeSet, R.styleable.BarsWithThumbs);
-        int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_width);
         outerLength = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_outerLength);
-        int innerLength = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_innerLength);
         thumbRadius = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_thumbRadius);
+        int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_width);
         int outerColor = attributes.getColor(R.styleable.BarsWithThumbs_outerColor);
         int innerColor = attributes.getColor(R.styleable.BarsWithThumbs_innerColor);
         int thumbColor = attributes.getColor(R.styleable.BarsWithThumbs_thumbColor);
         attributes.recycle();
         centerY = thumbRadius;
-        startThumbX = outerLength / 2 - innerLength / 2;
-        endThumbX = outerLength / 2 + innerLength / 2;
+        startThumbX = outerLength / 4;
+        endThumbX = outerLength / 4 * 3;
         createPaint(width, outerColor, innerColor, thumbColor);
     }
 
