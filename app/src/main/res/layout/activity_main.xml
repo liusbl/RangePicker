@@ -8,20 +8,16 @@
     android:layout_gravity="center"
     tools:context="telesoftas.rangebartest.MainActivity">
 
-    <telesoftas.rangebartest.bar.Bar
-        android:layout_width="256dp"
-        android:layout_height="4dp"
+    <telesoftas.rangebartest.bar.BarsWithThumbs
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        custom:color="@color/colorAccent"
-        custom:length="256dp"
-        custom:width="4dp"/>
-
-    <telesoftas.rangebartest.bar.Bar
-        android:layout_width="64dp"
-        android:layout_gravity="center"
-        android:layout_height="4dp"
-        custom:color="@color/colorPrimary"
-        custom:length="64dp"
+        custom:innerColor="@color/green"
+        custom:innerLength="92dp"
+        custom:outerColor="@color/red"
+        custom:outerLength="228dp"
+        custom:thumbColor="@color/blue"
+        custom:thumbRadius="8dp"
         custom:width="4dp"/>
 
 </FrameLayout>

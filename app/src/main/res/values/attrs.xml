@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="Bar">
-        <attr name="length" format="dimension"/>
+    <declare-styleable name="BarsWithThumbs">
         <attr name="width" format="dimension"/>
-        <attr name="color" format="color"/>
+        <attr name="outerLength" format="dimension"/>
+        <attr name="innerLength" format="dimension"/>
+        <attr name="thumbRadius" format="dimension"/>
+        <attr name="outerColor" format="color"/>
+        <attr name="innerColor" format="color"/>
+        <attr name="thumbColor" format="color"/>
     </declare-styleable>
 </resources>
