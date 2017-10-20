@@ -59,9 +59,9 @@ public class BarsWithThumbs extends View {
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawLine(0, centerY, outerLength, centerY, outerBarPaint);
-        canvas.drawLine(startThumbX, thumbRadius, endThumbX, thumbRadius, innerBarPaint);
-        canvas.drawCircle(startThumbX, thumbRadius, thumbRadius, thumbPaint);
-        canvas.drawCircle(endThumbX, thumbRadius, thumbRadius, thumbPaint);
+        canvas.drawLine(startThumbX, centerY, endThumbX, centerY, innerBarPaint);
+        canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint);
+        canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint);
     }
 
     @Override public boolean onTouchEvent(MotionEvent event) {
