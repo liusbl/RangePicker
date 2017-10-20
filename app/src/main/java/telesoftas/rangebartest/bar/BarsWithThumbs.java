@@ -39,7 +39,7 @@ public class BarsWithThumbs extends View {
                 attributeSet, R.styleable.BarsWithThumbs);
         outerLength = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_outerLength);
         thumbRadius = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_thumbRadius);
-        int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_width);
+        int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_barWidth);
         int outerColor = attributes.getColor(R.styleable.BarsWithThumbs_outerColor);
         int innerColor = attributes.getColor(R.styleable.BarsWithThumbs_innerColor);
         int thumbColor = attributes.getColor(R.styleable.BarsWithThumbs_thumbColor);

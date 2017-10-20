@@ -17,6 +17,6 @@
         custom:outerLength="228dp"
         custom:thumbColor="@color/blue"
         custom:thumbRadius="8dp"
-        custom:width="4dp"/>
+        custom:barWidth="4dp"/>
 
 </FrameLayout>
