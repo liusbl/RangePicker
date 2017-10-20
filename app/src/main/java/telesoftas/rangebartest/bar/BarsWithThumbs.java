@@ -26,8 +26,6 @@ public class BarsWithThumbs extends View {
     private int centerY;
     private float startThumbX;
     private float endThumbX;
-    private float innerStartX;
-    private float innerEndX;
 
     public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -54,8 +52,6 @@ public class BarsWithThumbs extends View {
         centerY = height / 2;
         startThumbX = outerLength / 2 - innerLength / 2;
         endThumbX = outerLength / 2 + innerLength / 2;
-        innerStartX = outerLength / 2 - innerLength / 2;
-        innerEndX = outerLength / 2 + innerLength / 2;
         createPaint(width, outerColor, innerColor, thumbColor);
     }
 
@@ -68,7 +64,7 @@ public class BarsWithThumbs extends View {
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawLine(0, centerY, outerLength, centerY, outerBarPaint);
-        canvas.drawLine(innerStartX, thumbRadius, innerEndX, thumbRadius, innerBarPaint);
+        canvas.drawLine(startThumbX, thumbRadius, endThumbX, thumbRadius, innerBarPaint);
         canvas.drawCircle(startThumbX, thumbRadius, thumbRadius, thumbPaint);
         canvas.drawCircle(endThumbX, thumbRadius, thumbRadius, thumbPaint);
     }
@@ -78,17 +74,15 @@ public class BarsWithThumbs extends View {
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
             move(event);
             return true;
-        } else if (action == MotionEvent.ACTION_CANCEL) {
-            return false;
         }
         return false;
     }
 
     private void move(MotionEvent event) {
         if (isCloserToStartThumb(event)) {
-            innerStartX = startThumbX = event.getX();
+            startThumbX = event.getX();
         } else {
-            innerEndX = endThumbX = event.getX();
+            endThumbX = event.getX();
         }
         invalidate();
     }
