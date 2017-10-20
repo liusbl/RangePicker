@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         custom:innerColor="@color/green"
         custom:outerColor="@color/red"
-        custom:outerLength="228dp"
+        custom:outerLength="256dp"
         custom:thumbColor="@color/blue"
         custom:thumbRadius="8dp"
         custom:barWidth="4dp"/>
