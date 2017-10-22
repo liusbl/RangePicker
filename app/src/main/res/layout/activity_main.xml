@@ -10,8 +10,8 @@
 
     <telesoftas.rangebartest.bar.BarsWithThumbs
         android:id="@+id/barsWithThumbs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="287dp"
+        android:layout_height="19dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -23,15 +23,16 @@
         custom:layout_constraintRight_toRightOf="parent"
         custom:layout_constraintTop_toTopOf="parent"
         custom:outerColor="#aaaaaa"
-        custom:outerLength="256dp"
         custom:thumbColor="#39c6db"
-        custom:thumbRadius="8dp"/>
+        custom:thumbRadius="8dp"
+        tools:layout_editor_absoluteX="9dp"
+        tools:layout_editor_absoluteY="368dp"/>
 
     <TextView
         android:id="@+id/textStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
+        android:layout_marginStart="0dp"
         android:layout_marginTop="8dp"
         android:text="First"
         custom:layout_constraintLeft_toLeftOf="@+id/barsWithThumbs"
@@ -41,7 +42,7 @@
         android:id="@+id/textEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginTop="8dp"
         android:text="Second"
         custom:layout_constraintRight_toRightOf="@+id/barsWithThumbs"

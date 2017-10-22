@@ -5,9 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import telesoftas.rangebartest.bar.BarsWithThumbs;
-import telesoftas.rangebartest.bar.OnBarChangeListener;
 
-public class MainActivity extends AppCompatActivity implements OnBarChangeListener {
+public class MainActivity extends AppCompatActivity implements BarsWithThumbs.OnRangeChangeListener {
     BarsWithThumbs bars;
     TextView start;
     TextView end;

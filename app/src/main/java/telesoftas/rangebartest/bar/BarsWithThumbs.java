@@ -23,7 +23,7 @@ public class BarsWithThumbs extends View {
     private int centerY;
     private float startThumbX;
     private float endThumbX;
-    private OnBarChangeListener listener;
+    private OnRangeChangeListener listener;
 
     public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -38,16 +38,11 @@ public class BarsWithThumbs extends View {
     private void init(@NonNull Context context, AttributeSet attributeSet) {
         TypedAttributes attributes = new TypedAttributesImpl(context,
                 attributeSet, R.styleable.BarsWithThumbs);
-        outerLength = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_outerLength);
-        thumbRadius = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_thumbRadius);
         int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_barWidth);
         int outerColor = attributes.getColor(R.styleable.BarsWithThumbs_outerColor);
         int innerColor = attributes.getColor(R.styleable.BarsWithThumbs_innerColor);
         int thumbColor = attributes.getColor(R.styleable.BarsWithThumbs_thumbColor);
         attributes.recycle();
-        centerY = thumbRadius;
-        startThumbX = outerLength / 4;
-        endThumbX = outerLength / 4 * 3;
         createPaint(width, outerColor, innerColor, thumbColor);
     }
 
@@ -95,8 +90,13 @@ public class BarsWithThumbs extends View {
     }
 
     @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        outerLength = MeasureSpec.getSize(widthMeasureSpec);
+        thumbRadius = MeasureSpec.getSize(heightMeasureSpec) / 2;
+        centerY = thumbRadius;
+        startThumbX = outerLength / 4;
+        endThumbX = outerLength / 4 * 3;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(outerLength, thumbRadius * 2);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
     @NonNull
@@ -118,7 +118,13 @@ public class BarsWithThumbs extends View {
         return paint;
     }
 
-    public void setListener(OnBarChangeListener listener) {
+    public void setListener(OnRangeChangeListener listener) {
         this.listener = listener;
+    }
+
+    public interface OnRangeChangeListener {
+        void onStartChanged(float ratio);
+
+        void onEndChanged(float ratio);
     }
 }
