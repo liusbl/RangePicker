@@ -16,7 +16,7 @@ import utils.TypedAttributesImpl;
 
 public class BarsWithThumbs extends View {
     private int outerLength;
-    private int thumbRadius;
+    private int thumbRadius = 24;
     private Paint outerBarPaint;
     private Paint innerBarPaint;
     private Paint thumbPaint;
@@ -24,6 +24,8 @@ public class BarsWithThumbs extends View {
     private float startThumbX;
     private float endThumbX;
     private OnRangeChangeListener listener;
+    private int verticalMargin = 32;
+    private int horizontalMargin = 8;
 
     public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -54,7 +56,7 @@ public class BarsWithThumbs extends View {
 
     @Override protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLine(0, centerY, outerLength, centerY, outerBarPaint);
+        canvas.drawLine(horizontalMargin, centerY, outerLength, centerY, outerBarPaint);
         canvas.drawLine(startThumbX, centerY, endThumbX, centerY, innerBarPaint);
         canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint);
         canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint);
@@ -71,12 +73,14 @@ public class BarsWithThumbs extends View {
 
     private void move(MotionEvent event) {
         float xCoordinate = event.getX();
-        if (isCloserToStartThumb(xCoordinate)) {
-            listener.onStartChanged(xCoordinate);
-            startThumbX = xCoordinate;
-        } else {
-            listener.onEndChanged(xCoordinate);
-            endThumbX = xCoordinate;
+        if (xCoordinate > 0 && xCoordinate < outerLength) {
+            if (isCloserToStartThumb(xCoordinate)) {
+                listener.onStartChanged(createRatio(xCoordinate));
+                startThumbX = xCoordinate;
+            } else {
+                listener.onEndChanged(createRatio(xCoordinate));
+                endThumbX = xCoordinate;
+            }
         }
         invalidate();
     }
@@ -90,13 +94,12 @@ public class BarsWithThumbs extends View {
     }
 
     @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        outerLength = MeasureSpec.getSize(widthMeasureSpec);
-        thumbRadius = MeasureSpec.getSize(heightMeasureSpec) / 2;
-        centerY = thumbRadius;
+        outerLength = MeasureSpec.getSize(widthMeasureSpec) - horizontalMargin;
+        centerY = MeasureSpec.getSize(heightMeasureSpec) / 2 + verticalMargin / 2;
         startThumbX = outerLength / 4;
         endThumbX = outerLength / 4 * 3;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec + verticalMargin);
     }
 
     @NonNull
