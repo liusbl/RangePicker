@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,14 +9,42 @@
     tools:context="telesoftas.rangebartest.MainActivity">
 
     <telesoftas.rangebartest.bar.BarsWithThumbs
+        android:id="@+id/barsWithThumbs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        custom:innerColor="@color/green"
-        custom:outerColor="@color/red"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        custom:barWidth="4dp"
+        custom:innerColor="#39c6db"
+        custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintLeft_toLeftOf="parent"
+        custom:layout_constraintRight_toRightOf="parent"
+        custom:layout_constraintTop_toTopOf="parent"
+        custom:outerColor="#aaaaaa"
         custom:outerLength="256dp"
-        custom:thumbColor="@color/blue"
-        custom:thumbRadius="8dp"
-        custom:barWidth="4dp"/>
+        custom:thumbColor="#39c6db"
+        custom:thumbRadius="8dp"/>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/textStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="8dp"
+        android:text="First"
+        custom:layout_constraintLeft_toLeftOf="@+id/barsWithThumbs"
+        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
+
+    <TextView
+        android:id="@+id/textEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="8dp"
+        android:text="Second"
+        custom:layout_constraintRight_toRightOf="@+id/barsWithThumbs"
+        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
+
+</android.support.constraint.ConstraintLayout>

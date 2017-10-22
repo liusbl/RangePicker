@@ -23,6 +23,7 @@ public class BarsWithThumbs extends View {
     private int centerY;
     private float startThumbX;
     private float endThumbX;
+    private OnBarChangeListener listener;
 
     public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -74,16 +75,23 @@ public class BarsWithThumbs extends View {
     }
 
     private void move(MotionEvent event) {
-        if (isCloserToStartThumb(event)) {
-            startThumbX = event.getX();
+        float xCoordinate = event.getX();
+        if (isCloserToStartThumb(xCoordinate)) {
+            listener.onStartChanged(xCoordinate);
+            startThumbX = xCoordinate;
         } else {
-            endThumbX = event.getX();
+            listener.onEndChanged(xCoordinate);
+            endThumbX = xCoordinate;
         }
         invalidate();
     }
 
-    private boolean isCloserToStartThumb(MotionEvent event) {
-        return event.getX() - startThumbX < endThumbX - event.getX();
+    private float createRatio(float xCoordinate) {
+        return (outerLength - xCoordinate) / xCoordinate;
+    }
+
+    private boolean isCloserToStartThumb(float xCoordinate) {
+        return xCoordinate - startThumbX < endThumbX - xCoordinate;
     }
 
     @Override protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -108,5 +116,9 @@ public class BarsWithThumbs extends View {
         paint.setColor(color);
         paint.setAntiAlias(true);
         return paint;
+    }
+
+    public void setListener(OnBarChangeListener listener) {
+        this.listener = listener;
     }
 }
