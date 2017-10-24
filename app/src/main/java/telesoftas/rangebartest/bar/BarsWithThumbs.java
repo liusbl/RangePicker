@@ -16,7 +16,7 @@ import utils.TypedAttributesImpl;
 
 public class BarsWithThumbs extends View {
     private int outerLength;
-    private int thumbRadius = 24;
+    private int thumbRadius;
     private Paint outerBarPaint;
     private Paint innerBarPaint;
     private Paint thumbPaint;
@@ -24,7 +24,6 @@ public class BarsWithThumbs extends View {
     private float startThumbX;
     private float endThumbX;
     private OnRangeChangeListener listener;
-    private int verticalMargin = 32;
     private int horizontalMargin = 8;
     private boolean twoAreMoving;
 
@@ -147,7 +146,9 @@ public class BarsWithThumbs extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         outerLength = MeasureSpec.getSize(widthMeasureSpec) - horizontalMargin;
+        int verticalMargin = 32;
         centerY = MeasureSpec.getSize(heightMeasureSpec) / 2 + verticalMargin / 2;
+        thumbRadius = centerY / 2;
         startThumbX = outerLength / 4;
         endThumbX = outerLength / 4 * 3;
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

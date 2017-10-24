@@ -10,8 +10,8 @@
 
     <telesoftas.rangebartest.bar.BarsWithThumbs
         android:id="@+id/barsWithThumbs"
-        android:layout_width="276dp"
-        android:layout_height="87dp"
+        android:layout_width="304dp"
+        android:layout_height="24dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
@@ -25,9 +25,9 @@
         custom:outerColor="#aaaaaa"
         custom:thumbColor="#39c6db"
         custom:layout_constraintVertical_bias="0.496"
-        custom:layout_constraintHorizontal_bias="0.549"
-        tools:layout_editor_absoluteY="196dp"
-        tools:layout_editor_absoluteX="50dp"/>
+        custom:layout_constraintHorizontal_bias="0.56"
+        tools:layout_editor_absoluteY="240dp"
+        tools:layout_editor_absoluteX="39dp"/>
 
     <TextView
         android:id="@+id/textStart"
