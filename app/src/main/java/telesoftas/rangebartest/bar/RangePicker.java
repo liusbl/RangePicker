@@ -87,7 +87,8 @@ public class RangePicker extends View {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                move(event);
+//                move(event);
+                storeState(event);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 move(event);
@@ -97,6 +98,20 @@ public class RangePicker extends View {
                 return false;
             default:
                 return false;
+        }
+    }
+
+    private void storeState(MotionEvent event) {
+        float xCoordinate = event.getX();
+        float coordinateDifference = endThumbX - startThumbX;
+        double offset = coordinateDifference / 6;
+        float halfCoordinateDifference = coordinateDifference / 2;
+        float thumbCenter = endThumbX - halfCoordinateDifference;
+        float newThumbStart = xCoordinate - halfCoordinateDifference;
+        float newThumbEnd = xCoordinate + halfCoordinateDifference;
+        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter) &&
+                coordinatesAreInBounds(newThumbStart, newThumbEnd)) {
+            twoAreMoving = true;
         }
     }
 
@@ -113,13 +128,26 @@ public class RangePicker extends View {
 
     private void move(float xCoordinate, double offset, float thumbCenter,
                       float newThumbStart, float newThumbEnd) {
+        if (twoAreMoving) {
+            moveTwo(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
+        } else {
+            moveOne(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
+        }
+    }
+
+    private void moveTwo(float xCoordinate, double offset, float thumbCenter, float newThumbStart, float newThumbEnd) {
         if (areTwoMovingAtEdge(newThumbStart, newThumbEnd)) {
             return;
         }
         if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter) &&
                 coordinatesAreInBounds(newThumbStart, newThumbEnd)) {
             moveBothThumbs(newThumbStart, newThumbEnd);
-        } else if (coordinatesAreInBounds(xCoordinate, xCoordinate)) {
+        }
+        invalidate();
+    }
+
+    private void moveOne(float xCoordinate, double offset, float thumbCenter, float newThumbStart, float newThumbEnd) {
+        if (coordinatesAreInBounds(xCoordinate, xCoordinate)) {
             moveThumb(xCoordinate);
         }
         invalidate();
@@ -136,11 +164,11 @@ public class RangePicker extends View {
     }
 
     private void moveBothThumbs(float newThumbStart, float newThumbEnd) {
+        twoAreMoving = true;
         startThumbX = newThumbStart;
         endThumbX = newThumbEnd;
         listener.onStartChanged(createRatio(startThumbX));
         listener.onEndChanged(createRatio(endThumbX));
-        twoAreMoving = true;
     }
 
     private boolean areTwoMovingAtEdge(float newThumbStart, float newThumbEnd) {
