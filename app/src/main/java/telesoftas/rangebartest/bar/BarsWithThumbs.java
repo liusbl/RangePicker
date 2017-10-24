@@ -26,6 +26,9 @@ public class BarsWithThumbs extends View {
     private OnRangeChangeListener listener;
     private int verticalMargin = 32;
     private int horizontalMargin = 8;
+    private boolean isActionDown;
+    private boolean isActionMove;
+    private boolean twoAreMoving;
 
     public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -64,9 +67,19 @@ public class BarsWithThumbs extends View {
 
     @Override public boolean onTouchEvent(MotionEvent event) {
         int action = event.getAction();
-        if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_MOVE) {
+        if (action == MotionEvent.ACTION_DOWN) {
+            isActionDown = true;
             move(event);
             return true;
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            isActionMove = true;
+            move(event);
+            return true;
+        } else if (action == MotionEvent.ACTION_UP) {
+            isActionDown = false;
+            isActionMove = false;
+            twoAreMoving = false;
+            return false;
         }
         return false;
     }
@@ -77,11 +90,18 @@ public class BarsWithThumbs extends View {
         double offset = coordinateDifference / 6;
         float halfCoordinateDifference = coordinateDifference / 2;
         float thumbCenter = endThumbX - halfCoordinateDifference;
-        if (xCoordinate > thumbCenter - offset && xCoordinate < thumbCenter + offset) {
-            float start = xCoordinate - halfCoordinateDifference;
-            startThumbX = start > 0 ? start : 0;
-            float end = xCoordinate + halfCoordinateDifference;
-            endThumbX = end < outerLength ? end : 0;
+        float start = xCoordinate - halfCoordinateDifference;
+        float end = xCoordinate + halfCoordinateDifference;
+
+        if (twoAreMoving && isActionMove && (start < 0 || end > outerLength)) {
+            return;
+        }
+        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter)) {
+            if (start > 0 && end < outerLength) {
+                startThumbX = start;
+                endThumbX = end;
+                twoAreMoving = true;
+            }
         } else if (xCoordinate > 0 && xCoordinate < outerLength) {
             if (isCloserToStartThumb(xCoordinate)) {
                 listener.onStartChanged(createRatio(xCoordinate));
@@ -91,8 +111,6 @@ public class BarsWithThumbs extends View {
                 endThumbX = xCoordinate;
             }
         }
-
-
 
 
 //        if (xCoordinate > 0 && xCoordinate < outerLength) {
@@ -112,6 +130,10 @@ public class BarsWithThumbs extends View {
 //            }
 //        }
         invalidate();
+    }
+
+    private boolean isCoordinateInThumbCenter(float xCoordinate, double offset, float thumbCenter) {
+        return xCoordinate > thumbCenter - offset && xCoordinate < thumbCenter + offset;
     }
 
     private float createRatio(float xCoordinate) {
