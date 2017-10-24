@@ -6,4 +6,14 @@
         <attr name="innerColor" format="color"/>
         <attr name="thumbColor" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="CustomSettingsView" >
+        <attr name="settings_label" format="string" />
+        <attr name="settings_value" format="string" />
+        <attr name="settings_measurement_unit" format="string" />
+        <attr name="settings_mode" format="enum">
+            <enum name="editText" value="0" />
+            <enum name="spinner" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>

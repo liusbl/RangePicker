@@ -73,7 +73,16 @@ public class BarsWithThumbs extends View {
 
     private void move(MotionEvent event) {
         float xCoordinate = event.getX();
-        if (xCoordinate > 0 && xCoordinate < outerLength) {
+        float coordinateDifference = endThumbX - startThumbX;
+        double offset = coordinateDifference / 6;
+        float halfCoordinateDifference = coordinateDifference / 2;
+        float thumbCenter = endThumbX - halfCoordinateDifference;
+        if (xCoordinate > thumbCenter - offset && xCoordinate < thumbCenter + offset) {
+            float start = xCoordinate - halfCoordinateDifference;
+            startThumbX = start > 0 ? start : 0;
+            float end = xCoordinate + halfCoordinateDifference;
+            endThumbX = end < outerLength ? end : 0;
+        } else if (xCoordinate > 0 && xCoordinate < outerLength) {
             if (isCloserToStartThumb(xCoordinate)) {
                 listener.onStartChanged(createRatio(xCoordinate));
                 startThumbX = xCoordinate;
@@ -82,6 +91,26 @@ public class BarsWithThumbs extends View {
                 endThumbX = xCoordinate;
             }
         }
+
+
+
+
+//        if (xCoordinate > 0 && xCoordinate < outerLength) {
+//            if (isInCenter(xCoordinate)) {
+//                listener.onStartChanged(createRatio(xCoordinate));
+//                listener.onEndChanged(createRatio(xCoordinate));
+//                float coordinateDifference = endThumbX - startThumbX;
+//                float half = coordinateDifference / 2;
+//                startThumbX = xCoordinate - half;
+//                endThumbX = xCoordinate + half;
+//            } else if (isCloserToStartThumb(xCoordinate)) {
+//                listener.onStartChanged(createRatio(xCoordinate));
+//                startThumbX = xCoordinate;
+//            } else {
+//                listener.onEndChanged(createRatio(xCoordinate));
+//                endThumbX = xCoordinate;
+//            }
+//        }
         invalidate();
     }
 

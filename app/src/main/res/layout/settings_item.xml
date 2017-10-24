@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/settingsLabelTextView"
+        style="@style/Widget.AppTheme.Base.TextAppearance.AppCompat.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:layout_marginTop="0dp"
+        tools:text="label"/>
+
+    <EditText
+        android:id="@+id/settingsValueEditText"
+        style="@style/Base.TextAppearance.AppCompat.Body2"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="@+id/settingsLabelTextView"
+        app:layout_constraintTop_toBottomOf="@+id/settingsLabelTextView"
+        tools:text="2330.000"/>
+
+    <Spinner
+        android:id="@+id/settingsValueSpinner"
+        style="@style/AppTheme.SpinnerStyle"
+        android:layout_width="175dp"
+        android:layout_height="50dp"
+        app:layout_constraintLeft_toLeftOf="@+id/settingsLabelTextView"
+        app:layout_constraintTop_toBottomOf="@+id/settingsLabelTextView"/>
+
+    <TextView
+        android:id="@+id/settingsMeasurementUnit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/settingsValueEditText"
+        app:layout_constraintRight_toRightOf="@+id/settingsValueEditText"
+        app:layout_constraintTop_toTopOf="@+id/settingsValueEditText"
+        app:layout_constraintVertical_bias="0.529"
+        tools:text="MHz"/>
+
+</android.support.constraint.ConstraintLayout>
