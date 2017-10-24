@@ -89,28 +89,47 @@ public class BarsWithThumbs extends View {
         float thumbCenter = endThumbX - halfCoordinateDifference;
         float newThumbStart = xCoordinate - halfCoordinateDifference;
         float newThumbEnd = xCoordinate + halfCoordinateDifference;
+        move(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
+    }
 
-        if (twoAreMoving && (newThumbStart < 0 || newThumbEnd > outerLength)) {
+    private void move(float xCoordinate, double offset, float thumbCenter,
+                      float newThumbStart, float newThumbEnd) {
+        if (areTwoMovingAtEdge(newThumbStart, newThumbEnd)) {
             return;
         }
-        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter)) {
-            if (newThumbStart > 0 && newThumbEnd < outerLength) {
-                startThumbX = newThumbStart;
-                endThumbX = newThumbEnd;
-                listener.onStartChanged(createRatio(startThumbX));
-                listener.onEndChanged(createRatio(endThumbX));
-                twoAreMoving = true;
-            }
-        } else if (xCoordinate > 0 && xCoordinate < outerLength) {
-            if (isCloserToStartThumb(xCoordinate)) {
-                listener.onStartChanged(createRatio(xCoordinate));
-                startThumbX = xCoordinate;
-            } else {
-                listener.onEndChanged(createRatio(xCoordinate));
-                endThumbX = xCoordinate;
-            }
+        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter) &&
+                coordinatesAreInBounds(newThumbStart, newThumbEnd)) {
+            moveBothThumbs(newThumbStart, newThumbEnd);
+        } else if (coordinatesAreInBounds(xCoordinate, xCoordinate)) {
+            moveThumb(xCoordinate);
         }
         invalidate();
+    }
+
+    private void moveThumb(float xCoordinate) {
+        if (isCloserToStartThumb(xCoordinate)) {
+            listener.onStartChanged(createRatio(xCoordinate));
+            startThumbX = xCoordinate;
+        } else {
+            listener.onEndChanged(createRatio(xCoordinate));
+            endThumbX = xCoordinate;
+        }
+    }
+
+    private void moveBothThumbs(float newThumbStart, float newThumbEnd) {
+        startThumbX = newThumbStart;
+        endThumbX = newThumbEnd;
+        listener.onStartChanged(createRatio(startThumbX));
+        listener.onEndChanged(createRatio(endThumbX));
+        twoAreMoving = true;
+    }
+
+    private boolean areTwoMovingAtEdge(float newThumbStart, float newThumbEnd) {
+        return twoAreMoving && (newThumbStart < 0 || newThumbEnd > outerLength);
+    }
+
+    private boolean coordinatesAreInBounds(float newThumbStart, float newThumbEnd) {
+        return newThumbStart > 0 && newThumbEnd < outerLength;
     }
 
     private boolean isCoordinateInThumbCenter(float xCoordinate, double offset, float thumbCenter) {
