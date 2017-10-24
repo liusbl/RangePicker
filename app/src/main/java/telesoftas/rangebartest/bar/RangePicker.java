@@ -1,6 +1,7 @@
 package telesoftas.rangebartest.bar;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.ColorInt;
@@ -11,41 +12,60 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import telesoftas.rangebartest.R;
-import utils.TypedAttributes;
-import utils.TypedAttributesImpl;
 
-public class BarsWithThumbs extends View {
+public class RangePicker extends View {
+    private static final int BAR_WIDTH_DEFAULT = 4;
+    private static final int OUTER_COLOR_DEFAULT = 0;
+    private static final int INNER_COLOR_DEFAULT = 0;
+    private static final int THUMB_COLOR_DEFAULT = 0;
+    private static final int HORIZONTAL_MARGIN = 8;
     private int outerLength;
     private int thumbRadius;
-    private Paint outerBarPaint;
-    private Paint innerBarPaint;
-    private Paint thumbPaint;
     private int centerY;
     private float startThumbX;
     private float endThumbX;
-    private OnRangeChangeListener listener;
-    private int horizontalMargin = 8;
     private boolean twoAreMoving;
+    private Paint outerBarPaint;
+    private Paint innerBarPaint;
+    private Paint thumbPaint;
+    private OnRangeChangeListener listener;
 
-    public BarsWithThumbs(Context context, @Nullable AttributeSet attrs) {
+    public RangePicker(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public BarsWithThumbs(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public RangePicker(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     private void init(@NonNull Context context, AttributeSet attributeSet) {
-        TypedAttributes attributes = new TypedAttributesImpl(context,
-                attributeSet, R.styleable.BarsWithThumbs);
-        int width = attributes.getLayoutDimension(R.styleable.BarsWithThumbs_barWidth);
-        int outerColor = attributes.getColor(R.styleable.BarsWithThumbs_outerColor);
-        int innerColor = attributes.getColor(R.styleable.BarsWithThumbs_innerColor);
-        int thumbColor = attributes.getColor(R.styleable.BarsWithThumbs_thumbColor);
+        TypedArray attributes = context.obtainStyledAttributes(attributeSet,
+                R.styleable.RangePicker);
+        int width = getWidth(attributes);
+        int outerColor = getOuterColor(attributes);
+        int innerColor = getInnerColor(attributes);
+        int thumbColor = getThumbColor(attributes);
         attributes.recycle();
         createPaint(width, outerColor, innerColor, thumbColor);
+    }
+
+    private int getWidth(TypedArray attributes) {
+        return attributes.getLayoutDimension(R.styleable.RangePicker_barWidth,
+                BAR_WIDTH_DEFAULT);
+    }
+
+    private int getOuterColor(TypedArray attributes) {
+        return attributes.getColor(R.styleable.RangePicker_outerColor, OUTER_COLOR_DEFAULT);
+    }
+
+    private int getInnerColor(TypedArray attributes) {
+        return attributes.getColor(R.styleable.RangePicker_innerColor, INNER_COLOR_DEFAULT);
+    }
+
+    private int getThumbColor(TypedArray attributes) {
+        return attributes.getColor(R.styleable.RangePicker_thumbColor, THUMB_COLOR_DEFAULT);
     }
 
     private void createPaint(int width, int outerColor, int innerColor, int thumbColor) {
@@ -57,7 +77,7 @@ public class BarsWithThumbs extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawLine(horizontalMargin, centerY, outerLength, centerY, outerBarPaint);
+        canvas.drawLine(HORIZONTAL_MARGIN, centerY, outerLength, centerY, outerBarPaint);
         canvas.drawLine(startThumbX, centerY, endThumbX, centerY, innerBarPaint);
         canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint);
         canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint);
@@ -145,7 +165,7 @@ public class BarsWithThumbs extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        outerLength = MeasureSpec.getSize(widthMeasureSpec) - horizontalMargin;
+        outerLength = MeasureSpec.getSize(widthMeasureSpec) - HORIZONTAL_MARGIN;
         int verticalMargin = 32;
         centerY = MeasureSpec.getSize(heightMeasureSpec) / 2 + verticalMargin / 2;
         thumbRadius = centerY / 2;

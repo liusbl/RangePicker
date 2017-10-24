@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="BarsWithThumbs">
+    <declare-styleable name="RangePicker">
         <attr name="barWidth" format="dimension"/>
         <attr name="outerColor" format="color"/>
         <attr name="innerColor" format="color"/>

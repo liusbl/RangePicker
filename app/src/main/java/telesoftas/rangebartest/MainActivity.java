@@ -4,17 +4,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import telesoftas.rangebartest.bar.BarsWithThumbs;
+import telesoftas.rangebartest.bar.RangePicker;
 
-public class MainActivity extends AppCompatActivity implements BarsWithThumbs.OnRangeChangeListener {
-    BarsWithThumbs bars;
+public class MainActivity extends AppCompatActivity implements RangePicker.OnRangeChangeListener {
+    RangePicker bars;
     TextView start;
     TextView end;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bars = (BarsWithThumbs) findViewById(R.id.barsWithThumbs);
+        bars = (RangePicker) findViewById(R.id.barsWithThumbs);
         start = (TextView)findViewById(R.id.textStart);
         end = (TextView)findViewById(R.id.textEnd);
         bars.setListener(this);

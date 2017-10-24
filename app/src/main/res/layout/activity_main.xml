@@ -8,7 +8,7 @@
     android:layout_gravity="center"
     tools:context="telesoftas.rangebartest.MainActivity">
 
-    <telesoftas.rangebartest.bar.BarsWithThumbs
+    <telesoftas.rangebartest.bar.RangePicker
         android:id="@+id/barsWithThumbs"
         android:layout_width="304dp"
         android:layout_height="24dp"
