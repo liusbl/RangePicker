@@ -10,21 +10,19 @@ public class MainActivity extends AppCompatActivity implements RangePicker.OnRan
     RangePicker bars;
     TextView start;
     TextView end;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bars = (RangePicker) findViewById(R.id.barsWithThumbs);
-        start = (TextView)findViewById(R.id.textStart);
-        end = (TextView)findViewById(R.id.textEnd);
+        start = (TextView) findViewById(R.id.textStart);
+        end = (TextView) findViewById(R.id.textEnd);
         bars.setListener(this);
     }
 
-    @Override public void onStartChanged(float ratio) {
-        start.setText(String.valueOf(ratio));
-    }
-
-    @Override public void onEndChanged(float ratio) {
-        end.setText(String.valueOf(ratio));
+    @Override public void onRangeChanged(float startRatio, float endRatio) {
+        start.setText(String.valueOf(startRatio));
+        end.setText(String.valueOf(endRatio));
     }
 }

@@ -18,12 +18,17 @@ public class RangePicker extends View {
     private static final int OUTER_COLOR_DEFAULT = 0;
     private static final int INNER_COLOR_DEFAULT = 0;
     private static final int THUMB_COLOR_DEFAULT = 0;
-    private static final int HORIZONTAL_MARGIN = 8;
-    private int outerLength;
+    private static final int HEIGHT_MARGIN = 16;
+    private int outerBarStartX;
+    private int outerBarEndX;
     private int thumbRadius;
     private int centerY;
-    private float startThumbX;
-    private float endThumbX;
+    private float innerBarStartX;
+    private float innerBarEndX;
+    private float distanceFromStartThumbToTouch;
+    private float distanceFromTouchToEndThumb;
+    private float currentX;
+    private double thumbCenterSize;
     private boolean twoAreMoving;
     private Paint outerBarPaint;
     private Paint innerBarPaint;
@@ -74,135 +79,6 @@ public class RangePicker extends View {
         thumbPaint = createThumbPaint(thumbColor);
     }
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
-        canvas.drawLine(HORIZONTAL_MARGIN, centerY, outerLength, centerY, outerBarPaint);
-        canvas.drawLine(startThumbX, centerY, endThumbX, centerY, innerBarPaint);
-        canvas.drawCircle(startThumbX, centerY, thumbRadius, thumbPaint);
-        canvas.drawCircle(endThumbX, centerY, thumbRadius, thumbPaint);
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-//                move(event);
-                storeState(event);
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                move(event);
-                return true;
-            case MotionEvent.ACTION_UP:
-                twoAreMoving = false;
-                return false;
-            default:
-                return false;
-        }
-    }
-
-    private void storeState(MotionEvent event) {
-        float xCoordinate = event.getX();
-        float coordinateDifference = endThumbX - startThumbX;
-        double offset = coordinateDifference / 6;
-        float halfCoordinateDifference = coordinateDifference / 2;
-        float thumbCenter = endThumbX - halfCoordinateDifference;
-        float newThumbStart = xCoordinate - halfCoordinateDifference;
-        float newThumbEnd = xCoordinate + halfCoordinateDifference;
-        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter) &&
-                coordinatesAreInBounds(newThumbStart, newThumbEnd)) {
-            twoAreMoving = true;
-        }
-    }
-
-    private void move(MotionEvent event) {
-        float xCoordinate = event.getX();
-        float coordinateDifference = endThumbX - startThumbX;
-        double offset = coordinateDifference / 6;
-        float halfCoordinateDifference = coordinateDifference / 2;
-        float thumbCenter = endThumbX - halfCoordinateDifference;
-        float newThumbStart = xCoordinate - halfCoordinateDifference;
-        float newThumbEnd = xCoordinate + halfCoordinateDifference;
-        move(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
-    }
-
-    private void move(float xCoordinate, double offset, float thumbCenter,
-                      float newThumbStart, float newThumbEnd) {
-        if (twoAreMoving) {
-            moveTwo(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
-        } else {
-            moveOne(xCoordinate, offset, thumbCenter, newThumbStart, newThumbEnd);
-        }
-    }
-
-    private void moveTwo(float xCoordinate, double offset, float thumbCenter, float newThumbStart, float newThumbEnd) {
-        if (areTwoMovingAtEdge(newThumbStart, newThumbEnd)) {
-            return;
-        }
-        if (isCoordinateInThumbCenter(xCoordinate, offset, thumbCenter) &&
-                coordinatesAreInBounds(newThumbStart, newThumbEnd)) {
-            moveBothThumbs(newThumbStart, newThumbEnd);
-        }
-        invalidate();
-    }
-
-    private void moveOne(float xCoordinate, double offset, float thumbCenter, float newThumbStart, float newThumbEnd) {
-        if (coordinatesAreInBounds(xCoordinate, xCoordinate)) {
-            moveThumb(xCoordinate);
-        }
-        invalidate();
-    }
-
-    private void moveThumb(float xCoordinate) {
-        if (isCloserToStartThumb(xCoordinate)) {
-            listener.onStartChanged(createRatio(xCoordinate));
-            startThumbX = xCoordinate;
-        } else {
-            listener.onEndChanged(createRatio(xCoordinate));
-            endThumbX = xCoordinate;
-        }
-    }
-
-    private void moveBothThumbs(float newThumbStart, float newThumbEnd) {
-        twoAreMoving = true;
-        startThumbX = newThumbStart;
-        endThumbX = newThumbEnd;
-        listener.onStartChanged(createRatio(startThumbX));
-        listener.onEndChanged(createRatio(endThumbX));
-    }
-
-    private boolean areTwoMovingAtEdge(float newThumbStart, float newThumbEnd) {
-        return twoAreMoving && (newThumbStart < 0 || newThumbEnd > outerLength);
-    }
-
-    private boolean coordinatesAreInBounds(float newThumbStart, float newThumbEnd) {
-        return newThumbStart > 0 && newThumbEnd < outerLength;
-    }
-
-    private boolean isCoordinateInThumbCenter(float xCoordinate, double offset, float thumbCenter) {
-        return xCoordinate > thumbCenter - offset && xCoordinate < thumbCenter + offset;
-    }
-
-    private float createRatio(float xCoordinate) {
-        return xCoordinate / outerLength;
-    }
-
-    private boolean isCloserToStartThumb(float xCoordinate) {
-        return xCoordinate - startThumbX < endThumbX - xCoordinate;
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        outerLength = MeasureSpec.getSize(widthMeasureSpec) - HORIZONTAL_MARGIN;
-        int verticalMargin = 32;
-        centerY = MeasureSpec.getSize(heightMeasureSpec) / 2 + verticalMargin / 2;
-        thumbRadius = centerY / 2;
-        startThumbX = outerLength / 4;
-        endThumbX = outerLength / 4 * 3;
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec + verticalMargin);
-    }
-
     @NonNull
     private Paint createBarPaint(float width, @ColorInt int color) {
         Paint paint = new Paint();
@@ -222,13 +98,124 @@ public class RangePicker extends View {
         return paint;
     }
 
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int fullWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int fullHeight = MeasureSpec.getSize(heightMeasureSpec);
+        thumbRadius = (fullHeight - HEIGHT_MARGIN) / 2;
+        int widthMargin = thumbRadius * 2;
+        int outerBarWidth = fullWidth - widthMargin * 2;
+        outerBarStartX = widthMargin;
+        outerBarEndX = widthMargin + outerBarWidth;
+        thumbCenterSize = outerBarWidth * 0.1;
+        centerY = fullHeight / 2;
+        innerBarStartX = outerBarStartX + widthMargin;
+        innerBarEndX = outerBarEndX - widthMargin;
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawLine(outerBarStartX, centerY, outerBarEndX, centerY, outerBarPaint);
+        canvas.drawLine(innerBarStartX, centerY, innerBarEndX, centerY, innerBarPaint);
+        canvas.drawCircle(innerBarStartX, centerY, thumbRadius, thumbPaint);
+        canvas.drawCircle(innerBarEndX, centerY, thumbRadius, thumbPaint);
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        currentX = event.getX();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                saveTouchState();
+                move();
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                move();
+                return true;
+            case MotionEvent.ACTION_UP:
+                move();
+                twoAreMoving = false;
+                return false;
+            default:
+                return false;
+        }
+    }
+
+    private void saveTouchState() {
+        if (shouldMoveBoth()) {
+            twoAreMoving = true;
+            distanceFromStartThumbToTouch = currentX - innerBarStartX;
+            distanceFromTouchToEndThumb = innerBarEndX - currentX;
+        }
+    }
+
+    private boolean shouldMoveBoth() {
+        float innerBarCenter = innerBarStartX + (innerBarEndX - innerBarStartX) / 2;
+        return currentX > innerBarStartX &&
+                currentX < innerBarEndX &&
+                currentX < innerBarCenter + thumbCenterSize &&
+                currentX > innerBarCenter - thumbCenterSize;
+    }
+
+    private void move() {
+        if (!areThumbsInBounds(currentX, currentX)) {
+            moveToEdge(currentX);
+        } else if (twoAreMoving) {
+            moveBoth();
+        } else {
+            moveOne();
+        }
+        listener.onRangeChanged(createRatio(innerBarStartX), createRatio(innerBarEndX));
+        invalidate();
+    }
+
+    private boolean areThumbsInBounds(float startCoordinate, float endCoordinate) {
+        return startCoordinate > outerBarStartX && endCoordinate < outerBarEndX;
+    }
+
+    private void moveToEdge(float startCoordinate) {
+        if (startCoordinate < outerBarStartX) {
+            innerBarStartX = outerBarStartX;
+        } else {
+            innerBarEndX = outerBarEndX;
+        }
+    }
+
+    private void moveBoth() {
+        float newInnerBarStartX = currentX - distanceFromStartThumbToTouch;
+        float newInnerBarEndX = currentX + distanceFromTouchToEndThumb;
+        if (areThumbsInBounds(newInnerBarStartX, newInnerBarEndX)) {
+            innerBarStartX = newInnerBarStartX;
+            innerBarEndX = newInnerBarEndX;
+        } else {
+            moveToEdge(newInnerBarStartX);
+        }
+    }
+
+    private void moveOne() {
+        if (isCloserToStartThumb()) {
+            innerBarStartX = currentX;
+        } else {
+            innerBarEndX = currentX;
+        }
+    }
+
+    private boolean isCloserToStartThumb() {
+        return currentX - innerBarStartX < innerBarEndX - currentX;
+    }
+
+    private float createRatio(float coordinate) {
+        return (coordinate - outerBarStartX) / (outerBarEndX - outerBarStartX);
+    }
+
     public void setListener(OnRangeChangeListener listener) {
         this.listener = listener;
     }
 
     public interface OnRangeChangeListener {
-        void onStartChanged(float ratio);
-
-        void onEndChanged(float ratio);
+        void onRangeChanged(float startRatio, float endRatio);
     }
 }

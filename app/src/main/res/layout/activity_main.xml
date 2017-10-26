@@ -10,24 +10,22 @@
 
     <telesoftas.rangebartest.bar.RangePicker
         android:id="@+id/barsWithThumbs"
-        android:layout_width="304dp"
-        android:layout_height="24dp"
+        android:layout_width="329dp"
+        android:layout_height="30dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         custom:barWidth="4dp"
+        custom:innerColor="#39c6db"
         custom:layout_constraintBottom_toBottomOf="parent"
+        custom:layout_constraintHorizontal_bias="0.56"
         custom:layout_constraintLeft_toLeftOf="parent"
         custom:layout_constraintRight_toRightOf="parent"
         custom:layout_constraintTop_toTopOf="parent"
-        custom:outerColor="#aaaaaa"
-        custom:innerColor="#39c6db"
-        custom:thumbColor="#39c6db"
         custom:layout_constraintVertical_bias="0.496"
-        custom:layout_constraintHorizontal_bias="0.56"
-        tools:layout_editor_absoluteY="240dp"
-        tools:layout_editor_absoluteX="39dp"/>
+        custom:outerColor="#aaaaaa"
+        custom:thumbColor="#39c6db"/>
 
     <TextView
         android:id="@+id/textStart"
