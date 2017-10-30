@@ -32,7 +32,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="First"
-        android:layout_marginLeft="6dp"
         custom:layout_constraintLeft_toLeftOf="@+id/barsWithThumbs"
         android:layout_marginTop="8dp"
         custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
@@ -42,7 +41,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Second"
-        android:layout_marginRight="6dp"
         custom:layout_constraintRight_toRightOf="@+id/barsWithThumbs"
         android:layout_marginTop="8dp"
         custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
