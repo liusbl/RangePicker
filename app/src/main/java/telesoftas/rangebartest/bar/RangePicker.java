@@ -181,7 +181,7 @@ public class RangePicker extends View {
     }
 
     private void moveToEdge(float startCoordinate) {
-        if (startCoordinate < outerBarStartX) {
+        if (startCoordinate <= outerBarStartX) {
             innerBarStartX = outerBarStartX;
         } else {
             innerBarEndX = outerBarEndX;
