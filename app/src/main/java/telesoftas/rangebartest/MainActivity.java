@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity implements RangePicker.OnRan
         bars = (RangePicker) findViewById(R.id.barsWithThumbs);
         start = (TextView) findViewById(R.id.textStart);
         end = (TextView) findViewById(R.id.textEnd);
-        bars.setListener(this);
+        bars.setOnRangeChangeListener(this);
     }
 
     @Override public void onRangeChanged(float startRatio, float endRatio) {

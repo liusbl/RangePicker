@@ -31,18 +31,18 @@
         android:id="@+id/textStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="First"
         custom:layout_constraintLeft_toLeftOf="@+id/barsWithThumbs"
-        android:layout_marginTop="8dp"
         custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
 
     <TextView
         android:id="@+id/textEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Second"
         custom:layout_constraintRight_toRightOf="@+id/barsWithThumbs"
-        android:layout_marginTop="8dp"
         custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
 
 </android.support.constraint.ConstraintLayout>
