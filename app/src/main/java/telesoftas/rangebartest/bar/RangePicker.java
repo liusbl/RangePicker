@@ -108,11 +108,11 @@ public class RangePicker extends View {
     }
 
     @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         if (!isOnMeasureCalled) {
             isOnMeasureCalled = true;
-            int fullWidth = MeasureSpec.getSize(widthMeasureSpec);
-            int fullHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int fullWidth = right - left;
+            int fullHeight = bottom - top;
             int widthMargin = thumbRadius * 2;
             int outerBarWidth = fullWidth - widthMargin * 2;
             outerBarStartX = widthMargin;
@@ -122,8 +122,7 @@ public class RangePicker extends View {
             moveStartThumb(outerBarStartX);
             moveEndThumb(outerBarEndX);
         }
-        setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onLayout(changed, left, top, right, bottom);
     }
 
     @Override
