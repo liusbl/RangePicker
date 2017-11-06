@@ -14,11 +14,11 @@ import android.view.View;
 import telesoftas.rangebartest.R;
 
 public class RangePicker extends View {
+    private static final int THUMB_RADIUS_DEFAULT = 8;
     private static final int BAR_WIDTH_DEFAULT = 4;
     private static final int OUTER_COLOR_DEFAULT = 0;
     private static final int INNER_COLOR_DEFAULT = 0;
     private static final int THUMB_COLOR_DEFAULT = 0;
-    private static final int HEIGHT_MARGIN = 16;
     private int outerBarStartX;
     private int outerBarEndX;
     private int thumbRadius;
@@ -27,10 +27,10 @@ public class RangePicker extends View {
     private float innerBarEndX;
     private float distanceFromStartThumbToTouch;
     private float distanceFromTouchToEndThumb;
-    private float currentX;
     private double thumbCenterSize;
     private boolean twoAreMoving;
     private boolean isMoving;
+    private boolean isOnMeasureCalled;
     private Paint outerBarPaint;
     private Paint innerBarPaint;
     private Paint thumbPaint;
@@ -49,16 +49,22 @@ public class RangePicker extends View {
     private void init(@NonNull Context context, AttributeSet attributeSet) {
         TypedArray attributes = context.obtainStyledAttributes(attributeSet,
                 R.styleable.RangePicker);
+        thumbRadius = getThumbRadius(attributes);
         int width = getWidth(attributes);
         int outerColor = getOuterColor(attributes);
         int innerColor = getInnerColor(attributes);
         int thumbColor = getThumbColor(attributes);
         attributes.recycle();
-        createPaint(width, outerColor, innerColor, thumbColor);
+        initializePaint(width, outerColor, innerColor, thumbColor);
+    }
+
+    private int getThumbRadius(TypedArray attributes) {
+        return attributes.getLayoutDimension(R.styleable.RangePicker_thumbRadius,
+                THUMB_RADIUS_DEFAULT);
     }
 
     private int getWidth(TypedArray attributes) {
-        return attributes.getLayoutDimension(R.styleable.RangePicker_barWidth,
+        return attributes.getLayoutDimension(R.styleable.RangePicker_barHeight,
                 BAR_WIDTH_DEFAULT);
     }
 
@@ -74,7 +80,7 @@ public class RangePicker extends View {
         return attributes.getColor(R.styleable.RangePicker_thumbColor, THUMB_COLOR_DEFAULT);
     }
 
-    private void createPaint(int width, int outerColor, int innerColor, int thumbColor) {
+    private void initializePaint(int width, int outerColor, int innerColor, int thumbColor) {
         outerBarPaint = createBarPaint(width, outerColor);
         innerBarPaint = createBarPaint(width, innerColor);
         thumbPaint = createThumbPaint(thumbColor);
@@ -101,19 +107,21 @@ public class RangePicker extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int fullWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int fullHeight = MeasureSpec.getSize(heightMeasureSpec);
-        thumbRadius = (fullHeight - HEIGHT_MARGIN) / 2;
-        int widthMargin = thumbRadius * 2;
-        int outerBarWidth = fullWidth - widthMargin * 2;
-        outerBarStartX = widthMargin;
-        outerBarEndX = widthMargin + outerBarWidth;
-        thumbCenterSize = outerBarWidth * 0.1;
-        centerY = fullHeight / 2;
-        innerBarStartX = outerBarStartX + widthMargin;
-        innerBarEndX = outerBarEndX - widthMargin;
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (!isOnMeasureCalled) {
+            isOnMeasureCalled = true;
+            int fullWidth = MeasureSpec.getSize(widthMeasureSpec);
+            int fullHeight = MeasureSpec.getSize(heightMeasureSpec);
+            int widthMargin = thumbRadius * 2;
+            int outerBarWidth = fullWidth - widthMargin * 2;
+            outerBarStartX = widthMargin;
+            outerBarEndX = widthMargin + outerBarWidth;
+            thumbCenterSize = outerBarWidth * 0.1;
+            centerY = fullHeight / 2;
+            innerBarStartX = outerBarStartX;
+            innerBarEndX = outerBarEndX;
+        }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
@@ -127,20 +135,20 @@ public class RangePicker extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        currentX = event.getX();
+        float currentX = event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 isMoving = true;
-                saveTouchState();
-                move();
+                saveTouchState(currentX);
+                move(currentX);
                 return true;
             case MotionEvent.ACTION_MOVE:
                 isMoving = true;
-                move();
+                move(currentX);
                 return true;
             case MotionEvent.ACTION_UP:
                 isMoving = false;
-                move();
+                move(currentX);
                 twoAreMoving = false;
                 return false;
             default:
@@ -148,15 +156,15 @@ public class RangePicker extends View {
         }
     }
 
-    private void saveTouchState() {
-        if (shouldMoveBoth()) {
+    private void saveTouchState(float currentX) {
+        if (shouldMoveBoth(currentX)) {
             twoAreMoving = true;
             distanceFromStartThumbToTouch = currentX - innerBarStartX;
             distanceFromTouchToEndThumb = innerBarEndX - currentX;
         }
     }
 
-    private boolean shouldMoveBoth() {
+    private boolean shouldMoveBoth(float currentX) {
         float innerBarCenter = innerBarStartX + (innerBarEndX - innerBarStartX) / 2;
         return currentX > innerBarStartX &&
                 currentX < innerBarEndX &&
@@ -164,13 +172,13 @@ public class RangePicker extends View {
                 currentX > innerBarCenter - thumbCenterSize;
     }
 
-    private void move() {
+    private void move(float currentX) {
         if (!areThumbsInBounds(currentX, currentX)) {
             moveToEdge(currentX);
         } else if (twoAreMoving) {
-            moveBoth();
+            moveBoth(currentX);
         } else {
-            moveOne();
+            moveOne(currentX);
         }
         listener.onRangeChanged(createRatio(innerBarStartX), createRatio(innerBarEndX));
         invalidate();
@@ -188,7 +196,7 @@ public class RangePicker extends View {
         }
     }
 
-    private void moveBoth() {
+    private void moveBoth(float currentX) {
         float newInnerBarStartX = currentX - distanceFromStartThumbToTouch;
         float newInnerBarEndX = currentX + distanceFromTouchToEndThumb;
         if (areThumbsInBounds(newInnerBarStartX, newInnerBarEndX)) {
@@ -199,15 +207,15 @@ public class RangePicker extends View {
         }
     }
 
-    private void moveOne() {
-        if (isCloserToStartThumb()) {
+    private void moveOne(float currentX) {
+        if (isCloserToStartThumb(currentX)) {
             innerBarStartX = currentX;
         } else {
             innerBarEndX = currentX;
         }
     }
 
-    private boolean isCloserToStartThumb() {
+    private boolean isCloserToStartThumb(float currentX) {
         return currentX - innerBarStartX < innerBarEndX - currentX;
     }
 

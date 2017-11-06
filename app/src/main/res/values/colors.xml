@@ -3,7 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="red">#FF0000</color>
-    <color name="green">#00FF00</color>
-    <color name="blue">#0000FF</color>
+
+    <color name="medium_turquoise">#39C6DB</color>
+    <color name="white_smoke">#F8F8F8</color>
+    <color name="isabelline">#EBEBEB</color>
+    <color name="dark_grey">#AAAAAA</color>
+    <color name="medium_jungle_green">#2B2C2C</color>
 </resources>
