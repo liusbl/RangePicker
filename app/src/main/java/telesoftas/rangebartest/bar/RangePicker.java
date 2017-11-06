@@ -29,7 +29,6 @@ public class RangePicker extends View {
     private float distanceFromTouchToEndThumb;
     private double thumbCenterSize;
     private boolean twoAreMoving;
-    private boolean isMoving;
     private boolean isOnMeasureCalled;
     private Paint outerBarPaint;
     private Paint innerBarPaint;
@@ -153,20 +152,8 @@ public class RangePicker extends View {
     }
 
     private void onActionDown(float currentX) {
-        isMoving = true;
         saveTouchState(currentX);
         move(currentX);
-    }
-
-    private void onActionMove(float currentX) {
-        isMoving = true;
-        move(currentX);
-    }
-
-    private void onActionUp(float currentX) {
-        isMoving = false;
-        move(currentX);
-        twoAreMoving = false;
     }
 
     private void saveTouchState(float currentX) {
@@ -175,6 +162,16 @@ public class RangePicker extends View {
             distanceFromStartThumbToTouch = currentX - innerBarStartX;
             distanceFromTouchToEndThumb = innerBarEndX - currentX;
         }
+    }
+
+    private void onActionMove(float currentX) {
+        move(currentX);
+    }
+
+    private void onActionUp(float currentX) {
+        move(currentX);
+        twoAreMoving = false;
+        listener.onFinishedMoving();
     }
 
     private boolean shouldMoveBoth(float currentX) {
@@ -236,15 +233,13 @@ public class RangePicker extends View {
         return (coordinate - outerBarStartX) / (outerBarEndX - outerBarStartX);
     }
 
-    public boolean isMoving() {
-        return isMoving;
-    }
-
     public void setOnRangeChangeListener(OnRangeChangeListener listener) {
         this.listener = listener;
     }
 
     public interface OnRangeChangeListener {
         void onRangeChanged(float startRatio, float endRatio);
+
+        void onFinishedMoving();
     }
 }
