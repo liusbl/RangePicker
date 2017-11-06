@@ -138,22 +138,35 @@ public class RangePicker extends View {
         float currentX = event.getX();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                isMoving = true;
-                saveTouchState(currentX);
-                move(currentX);
-                return true;
+                onActionDown(currentX);
+                break;
             case MotionEvent.ACTION_MOVE:
-                isMoving = true;
-                move(currentX);
-                return true;
+                onActionMove(currentX);
+                break;
             case MotionEvent.ACTION_UP:
-                isMoving = false;
-                move(currentX);
-                twoAreMoving = false;
-                return false;
+                onActionUp(currentX);
+                break;
             default:
-                return false;
+                break;
         }
+        return true;
+    }
+
+    private void onActionDown(float currentX) {
+        isMoving = true;
+        saveTouchState(currentX);
+        move(currentX);
+    }
+
+    private void onActionMove(float currentX) {
+        isMoving = true;
+        move(currentX);
+    }
+
+    private void onActionUp(float currentX) {
+        isMoving = false;
+        move(currentX);
+        twoAreMoving = false;
     }
 
     private void saveTouchState(float currentX) {
