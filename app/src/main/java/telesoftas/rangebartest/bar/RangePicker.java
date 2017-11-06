@@ -23,8 +23,6 @@ public class RangePicker extends View {
     private int outerBarEndX;
     private int thumbRadius;
     private int centerY;
-    private float innerBarStartX;
-    private float innerBarEndX;
     private float distanceFromStartThumbToTouch;
     private float distanceFromTouchToEndThumb;
     private double thumbCenterSize;
@@ -34,6 +32,8 @@ public class RangePicker extends View {
     private Paint innerBarPaint;
     private Paint thumbPaint;
     private OnRangeChangeListener listener;
+    private Thumb startThumb = new Thumb();
+    private Thumb endThumb = new Thumb();
 
     public RangePicker(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -116,8 +116,8 @@ public class RangePicker extends View {
             outerBarEndX = widthMargin + outerBarWidth;
             thumbCenterSize = outerBarWidth * 0.1;
             centerY = fullHeight / 2;
-            innerBarStartX = outerBarStartX;
-            innerBarEndX = outerBarEndX;
+            startThumb.coordinate = outerBarStartX;
+            endThumb.coordinate = outerBarEndX;
         }
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -127,9 +127,10 @@ public class RangePicker extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawLine(outerBarStartX, centerY, outerBarEndX, centerY, outerBarPaint);
-        canvas.drawLine(innerBarStartX, centerY, innerBarEndX, centerY, innerBarPaint);
-        canvas.drawCircle(innerBarStartX, centerY, thumbRadius, thumbPaint);
-        canvas.drawCircle(innerBarEndX, centerY, thumbRadius, thumbPaint);
+        canvas.drawLine(startThumb.coordinate, centerY, endThumb.coordinate,
+                centerY, innerBarPaint);
+        canvas.drawCircle(startThumb.coordinate, centerY, thumbRadius, thumbPaint);
+        canvas.drawCircle(endThumb.coordinate, centerY, thumbRadius, thumbPaint);
     }
 
     @Override
@@ -152,45 +153,48 @@ public class RangePicker extends View {
     }
 
     private void onActionDown(float currentX) {
-        saveTouchState(currentX);
-        move(currentX);
+        saveMovingThumbCount(currentX);
+        updateThumbPositions(currentX);
     }
 
-    private void saveTouchState(float currentX) {
+    private void saveMovingThumbCount(float currentX) {
         if (shouldMoveBoth(currentX)) {
             twoAreMoving = true;
-            distanceFromStartThumbToTouch = currentX - innerBarStartX;
-            distanceFromTouchToEndThumb = innerBarEndX - currentX;
+            distanceFromStartThumbToTouch = currentX - startThumb.coordinate;
+            distanceFromTouchToEndThumb = endThumb.coordinate - currentX;
         }
     }
 
     private void onActionMove(float currentX) {
-        move(currentX);
+        updateThumbPositions(currentX);
     }
 
     private void onActionUp(float currentX) {
-        move(currentX);
+        updateThumbPositions(currentX);
         twoAreMoving = false;
-        listener.onFinishedMoving(createRatio(innerBarStartX), createRatio(innerBarEndX));
+        listener.onFinishedMoving(createRatio(startThumb.coordinate),
+                createRatio(endThumb.coordinate));
     }
 
     private boolean shouldMoveBoth(float currentX) {
-        float innerBarCenter = innerBarStartX + (innerBarEndX - innerBarStartX) / 2;
-        return currentX > innerBarStartX &&
-                currentX < innerBarEndX &&
-                currentX < innerBarCenter + thumbCenterSize &&
-                currentX > innerBarCenter - thumbCenterSize;
+        float innerBarCenter = startThumb.coordinate
+                + (endThumb.coordinate - startThumb.coordinate) / 2;
+        return currentX > startThumb.coordinate
+                && currentX < endThumb.coordinate
+                && currentX < innerBarCenter + thumbCenterSize
+                && currentX > innerBarCenter - thumbCenterSize;
     }
 
-    private void move(float currentX) {
+    private void updateThumbPositions(float currentX) {
         if (!areThumbsInBounds(currentX, currentX)) {
-            moveToEdge(currentX);
+            moveThumbToEdge(currentX);
         } else if (twoAreMoving) {
-            moveBoth(currentX);
+            moveBothThumbs(currentX);
         } else {
-            moveOne(currentX);
+            moveClosestThumbToCurrentX(currentX);
         }
-        listener.onRangeChanged(createRatio(innerBarStartX), createRatio(innerBarEndX));
+        listener.onRangeChanged(createRatio(startThumb.coordinate),
+                createRatio(endThumb.coordinate));
         invalidate();
     }
 
@@ -198,35 +202,35 @@ public class RangePicker extends View {
         return startCoordinate > outerBarStartX && endCoordinate < outerBarEndX;
     }
 
-    private void moveToEdge(float startCoordinate) {
-        if (startCoordinate <= outerBarStartX) {
-            innerBarStartX = outerBarStartX;
+    private void moveThumbToEdge(float outOfBoundsCoordinate) {
+        if (outOfBoundsCoordinate <= outerBarStartX) {
+            startThumb.coordinate = outerBarStartX;
         } else {
-            innerBarEndX = outerBarEndX;
+            endThumb.coordinate = outerBarEndX;
         }
     }
 
-    private void moveBoth(float currentX) {
+    private void moveBothThumbs(float currentX) {
         float newInnerBarStartX = currentX - distanceFromStartThumbToTouch;
         float newInnerBarEndX = currentX + distanceFromTouchToEndThumb;
         if (areThumbsInBounds(newInnerBarStartX, newInnerBarEndX)) {
-            innerBarStartX = newInnerBarStartX;
-            innerBarEndX = newInnerBarEndX;
+            startThumb.coordinate = (int) newInnerBarStartX;
+            endThumb.coordinate = (int) newInnerBarEndX;
         } else {
-            moveToEdge(newInnerBarStartX);
+            moveThumbToEdge(newInnerBarStartX);
         }
     }
 
-    private void moveOne(float currentX) {
-        if (isCloserToStartThumb(currentX)) {
-            innerBarStartX = currentX;
-        } else {
-            innerBarEndX = currentX;
-        }
+    private void moveClosestThumbToCurrentX(float currentX) {
+        getClosestThumb(currentX).coordinate = (int) currentX;
     }
 
-    private boolean isCloserToStartThumb(float currentX) {
-        return currentX - innerBarStartX < innerBarEndX - currentX;
+    private Thumb getClosestThumb(float currentX) {
+        if (currentX - startThumb.coordinate < endThumb.coordinate - currentX) {
+            return startThumb;
+        } else {
+            return endThumb;
+        }
     }
 
     private float createRatio(float coordinate) {
@@ -235,6 +239,10 @@ public class RangePicker extends View {
 
     public void setOnRangeChangeListener(OnRangeChangeListener listener) {
         this.listener = listener;
+    }
+
+    private static class Thumb {
+        private int coordinate;
     }
 
     public interface OnRangeChangeListener {
