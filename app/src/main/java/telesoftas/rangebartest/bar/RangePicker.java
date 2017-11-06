@@ -171,7 +171,7 @@ public class RangePicker extends View {
     private void onActionUp(float currentX) {
         move(currentX);
         twoAreMoving = false;
-        listener.onFinishedMoving();
+        listener.onFinishedMoving(createRatio(innerBarStartX), createRatio(innerBarEndX));
     }
 
     private boolean shouldMoveBoth(float currentX) {
@@ -240,6 +240,6 @@ public class RangePicker extends View {
     public interface OnRangeChangeListener {
         void onRangeChanged(float startRatio, float endRatio);
 
-        void onFinishedMoving();
+        void onFinishedMoving(float startRatio, float endRatio);
     }
 }

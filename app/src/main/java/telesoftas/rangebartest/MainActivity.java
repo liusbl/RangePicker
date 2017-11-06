@@ -11,8 +11,7 @@ public class MainActivity extends AppCompatActivity implements RangePicker.OnRan
     TextView start;
     TextView end;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bars = (RangePicker) findViewById(R.id.barsWithThumbs);
@@ -22,6 +21,11 @@ public class MainActivity extends AppCompatActivity implements RangePicker.OnRan
     }
 
     @Override public void onRangeChanged(float startRatio, float endRatio) {
+//        start.setText(String.valueOf(startRatio));
+//        end.setText(String.valueOf(endRatio));
+    }
+
+    @Override public void onFinishedMoving(float startRatio, float endRatio) {
         start.setText(String.valueOf(startRatio));
         end.setText(String.valueOf(endRatio));
     }
