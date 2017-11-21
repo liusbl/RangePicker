@@ -1,6 +1,6 @@
 package telesoftas.rangebartest.bar;
 
-class RangeRatioConverterImpl implements RangeRatioConverter {
+public class RangeRatioConverterImpl implements RangeRatioConverter {
     private Range range;
     private int increment;
 

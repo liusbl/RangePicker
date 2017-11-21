@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements RangePicker.OnRan
         valueSpinner.setAdapter(valueAdapter);
 
         bars.setOnRangeChangeListener(this);
-        converter.setRange(new Range(100, 1000));
+        converter.setRange(new Range(100, 1000), 10);
     }
 
     @Override
