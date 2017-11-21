@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -25,24 +24,24 @@
         custom:layout_constraintTop_toTopOf="parent"
         custom:outerColor="@color/dark_grey"
         custom:thumbColor="@color/medium_turquoise"
-        custom:thumbRadius="8dp"/>
+        custom:thumbRadius="8dp" />
 
     <TextView
         android:id="@+id/textStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="First"
         custom:layout_constraintLeft_toLeftOf="@+id/barsWithThumbs"
-        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
+        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"
+        tools:text="First" />
 
     <TextView
         android:id="@+id/textEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="Second"
         custom:layout_constraintRight_toRightOf="@+id/barsWithThumbs"
-        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"/>
+        custom:layout_constraintTop_toBottomOf="@+id/barsWithThumbs"
+        tools:text="Second" />
 
 </android.support.constraint.ConstraintLayout>
