@@ -1,11 +1,13 @@
 package telesoftas.rangebartest.bar;
 
-public class RangeRatioConverterImpl implements RangeRatioConverter {
+class RangeRatioConverterImpl implements RangeRatioConverter {
     private Range range;
+    private int increment;
 
     @Override
-    public void setRange(Range range) {
+    public void setRange(Range range, int increment) {
         this.range = range;
+        this.increment = increment;
     }
 
     @Override
@@ -13,7 +15,19 @@ public class RangeRatioConverterImpl implements RangeRatioConverter {
         if (range != null) {
             double difference = range.getEnd() - range.getStart();
             double value = difference * ratio;
-            return Math.round(range.getStart() + value);
+            long value2 = Math.round(range.getStart() + value);
+
+            if (increment != 0) {
+
+                long modulo = value2 % increment;
+                if (modulo >= increment / 2) {
+                    value2 = value2 - modulo + increment;
+                } else if (modulo < increment / 2) {
+                    value2 = value2 - modulo;
+                }
+            }
+
+            return value2;
         } else {
             return 0;
         }
